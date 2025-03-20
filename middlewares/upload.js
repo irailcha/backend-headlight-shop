@@ -1,33 +1,28 @@
+import { v2 as cloudinary } from "cloudinary";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
 import multer from "multer";
-import path from "path";
+import dotenv from "dotenv";
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/");
-  },
-  filename: (req, file, cb) => {
-    const fileExtension = path.extname(file.originalname);
-    const timestamp = Date.now();
-    cb(null, `${timestamp}-${file.fieldname}${fileExtension}`);
+
+dotenv.config();
+// Налаштування Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+// Налаштування сховища для Multer
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "Folder_1", // Папка, де зберігатимуться файли в Cloudinary
+    allowed_formats: ["jpg", "png", "webp", "mp4", "mov"], // Дозволені формати
+    resource_type: "auto", // Автоматичне визначення типу файлу
   },
 });
 
-const fileFilter = (req, file, cb) => {
-  const allowedTypes = /jpeg|jpg|png|gif|mp4|avi|mov/;
-  const fileType = allowedTypes.test(path.extname(file.originalname).toLowerCase());
-  const mimeType = allowedTypes.test(file.mimetype);
-
-  if (fileType && mimeType) {
-    cb(null, true);
-  } else {
-    cb(new Error("Invalid file type. Only images and videos are allowed."));
-  }
-};
-
-const upload = multer({
-  storage: storage,
-  fileFilter: fileFilter,
-  limits: { fileSize: 50 * 1024 * 1024 }, 
-});
+// Ініціалізація Multer
+const upload = multer({ storage });
 
 export default upload;

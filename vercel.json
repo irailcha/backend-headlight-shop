@@ -8,8 +8,13 @@
   ],
   "routes": [
     {
+      "src": "/adverts",
+      "dest": "/server.js"
+    },
+    {
       "src": "/(.*)",
       "dest": "/server.js"
     }
-  ]
+  ],
+  "outputDirectory": "dist" 
 }

@@ -2,23 +2,35 @@ import { Schema, model } from "mongoose";
 
 const advertSchema = new Schema(
   {
-    type: {
+    mark: {
       type: String,
       required: true,
+      maxlength: 50,
     },
-    compatibility: {
+    model:{
       type: String,
       required: true,
+      maxlength: 50,
+    },
+    year:{
+      type: String,
+      required: true,
+      maxlength: 50,
     },
     state: {
       type: String,
       required: true,
-      enum: ["new", "used", "refurbished"],
+      enum: ["Нова", "Вживана"],
     },
     typeOfLamps: {
       type: String,
       required: true,
-      enum: ["halogen", "xenon", "LED"],
+      maxlength: 50,
+    },
+    side: {
+      type: String,
+      required: true,
+      enum: ["Права", "Ліва", "Комплект"],
     },
     isOriginal: {
       type: Boolean,
@@ -27,18 +39,7 @@ const advertSchema = new Schema(
     partNumber: {
       type: String,
       required: true,
-    },
-    material: {
-      type: String,
-      required: true,
-    },
-    typeOfGlass: {
-      type: String,
-      required: true,
-    },
-    functionality: {
-      type: [String],
-      required: true,
+      maxlength: 100,
     },
     price: {
       type: Number,
@@ -47,23 +48,21 @@ const advertSchema = new Schema(
     },
     photo: {
       type: [String],
-      required: true,
+      required: false,
     },
     videoUrl: { 
-      type: String,
-      required: false, 
-    },
-    completeSet: {
       type: [String],
-      required: true,
+      required: false, 
     },
     description: {
       type: String,
       required: true,
+      maxlength: 500,
     },
   },
   { timestamps: true }
 );
+
 
 const Advert = model("Advert", advertSchema);
 
